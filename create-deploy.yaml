@@ -1,0 +1,124 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-prod-deployment
+  namespace: cka
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp-prod
+      app_runtime_stage: dev
+  template:
+    metadata:                # contaner start
+      name: nginx-prod-pod
+      labels:
+        app: myapp-prod
+    spec:
+      containers:
+      - name: nginx-prod-container
+        image: nginx:1.16
+        env:
+          - name: var1
+            value: "this is variable"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: "/var/www/html"
+          name: nginx-log-volume
+      volumes:
+        - name: nginx-log-volume
+          hostPath:
+            path: /data/app
+      restartPolicy: Always
+
+
+# kubectl get pods --selector="run=load-balancer-example" --output=wide
+# kubectl expose deployment -n kubernetes-dashboard kubernetes-dashboard --type=NodePort --name=kubedash-nodeportservice
+# ------------------
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: cka
+  name: pv-volume-nginx
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/nginx"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: cka
+  name: pv-claim-nginx
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: cka
+  name: pv-nginxc-nodeservice
+  labels:
+    run: pv-nginx
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+    name: http
+  - port: 443
+    protocol: TCP
+    name: https
+  selector:
+    app: pv-nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: pv-nginx
+  name: pv-nginx
+  namespace: cka
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pv-nginx
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: pv-nginx
+    spec:
+      volumes:
+      - name: pv-volume-nginx
+        persistentVolumeClaim:
+                claimName: pv-claim-nginx
+      containers:
+      - image: nginx:1.17
+        name: nginx
+        volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: pv-volume-nginx
+
+        resources: {}
+status: {}
+
+important contunertiy try k8s load-balancer Service  location cka/pvc

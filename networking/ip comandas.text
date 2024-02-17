@@ -1,0 +1,36 @@
+ip link
+ip route show default
+ip link show cni0
+ip addr
+ip addr add 192.168.1.10/24 dev eth0
+ip route
+ip route add 192.168.1.0/24 via 192.168.2.1
+cat /proc/sys/net/ipv4/ip_forward
+    1
+
+arp
+netstat -plnt
+
+
+Use the command: netstat -nplt
+Run the command: netstat -anp | grep etcd
+netstat -anp | grep etcd | grep 2380 | wc -l 
+
+
+
+
+
+
+
+node*******************3 nodes cluster
+ip link add v-net-0 type bridge
+ip link add v-net-0 type bridge
+ip link add v-net-0 type bridge
+
+ip link set dev v-net-0 up 
+ip link set dev v-net-0 up 
+ip link set dev v-net-0 up 
+
+ip addr add 10.244.1.1/24 dev v-net-0
+ip addr add 10.244.2.1/24 dev v-net-0
+ip addr add 10.244.3.1/24 dev v-net-0

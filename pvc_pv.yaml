@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-vol
+spec:
+  accessModes:
+    - ReadWriteOne
+  capacity:
+    Storage: 1Gi
+  awsElasticBlockStore:
+    volumeID: <volume volumeID:>
+    fsType: ext4
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOne
+  resources:
+    requests:
+      Storage: 500Mi
+
+# kubectl create -f pvc.yaml 
+# kubectl get Presistentvolumeclaim
+
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: mypd
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: myclaim
+
+# kubectl exec webapp -- cat /log/app.log
+# kubectl get po webapp -o yaml > webapp.yaml
+# --dry-run=client -o yaml
+# helm install monitoring prometheus-community/Kube-prometheus-stack --namespace kubernetes-monitoring
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: mypd
+  volumes:
+    - name: mypd
+      hostPath:
+        path: /data
+        type: Directory
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: cka
+  name: pv-volume-nginx
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/nginx"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: cka
+  name: pv-claim-nginx
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+        # https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaim-policy
+      # https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolume
+
+
+---

@@ -1,0 +1,28 @@
+# Create a pod with environment variables as var1=value1.Check the environment variable in pod
+
+# kubectl run nginx-pod --image=nginx --restart=Never --port=8080 --env=var1=value1 -o yaml --dry-run=client > pod.yaml
+
+
+# kubectl run nginx --image=nginx --restart=Never --port=8080 -o yaml --dry-run=client > moj.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-prod # pod name
+  labels:
+    app: myapp     # labels 
+    type: front-end
+spec:
+  containers:  # is list and array
+    - name: nginx-container
+      image: nginx
+      ports:
+        - containerPort: 80 
+      volumeMounts:
+        - mountPath: "/var/www/html"
+          name: nginx-log-volume
+  volumes:
+    - name: nginx-log-volume
+      hostPath:
+        path: /data/app
+      

@@ -1,0 +1,49 @@
+apiVersion: apps/v1 
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaset
+  labels:
+    app: myapp
+    type: front-end
+
+spec:
+  selector:
+    matchLabels:   #  it should be labels on pod metadata section same as it
+      type: front-end
+  replicas: 2
+  template:
+    metadata:
+      name: myapp-prod # pod name
+      labels:
+        app: myapp     # labels 
+        type: front-end
+    spec:
+      containers:  # is list and array
+      - name: nginx-container
+        image: nginx 
+
+# kubectl create -f replica.yaml
+
+# kubectl get replicaset
+
+# kubectl delete replicaset myapp-replicaset
+
+# kubectl edit replicasets.apps myapp-replicaset
+
+# kubectl delete replicationcontrollers myapp-rc
+
+# kubectl scale replicaset myapp-replicaset --replicas=2
+
+# kubectl scale --replicas=8 -f replica.yaml
+# kubectl replace -f replica.yaml
+
+
+
+
+
+
+
+
+
+# kubectl create -f pod-definition.yaml
+# kubectl describe pod myapp-prod

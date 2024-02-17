@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-prod # pod name
+  labels:
+    app: myapp     # labels 
+    type: front-end
+spec:
+  containers:  # is list and array
+    - name: nginx-container
+      image: nginx
+      ports:
+        - containerPort: 80 
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: size
+            operator: In  # NotIn  or Exists will directly take key and vlaues not required
+            values:
+            - Large
+
+
+# to set node larger label use below commad
+# kubectl label nodes worker-1 size=Large
+
+# kubectl create -f pod-definition.yaml
+# kubectl describe pod myapp-prod
+
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: color
+                operator: In
+                values:
+                - blue
+
+# kubectl create deployment red --image=nginx --replicas=2 --dry-run=client -o yaml > pods.yaml
+

@@ -1,0 +1,27 @@
+# kubectl taint nodes node-name key=value:taint-effect
+
+# kubectl taint nodes worker-1 app=blue:NoSchedule  (or) preferschedule (or) noexecute
+
+kubectl describe node master | grep Taint
+
+kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule-
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-prod # pod name
+  labels:
+    type: front-end
+spec:
+  containers:  # is list and array
+    - name: nginx-container
+      image: nginx
+      ports:
+        - containerPort: 80 
+  tolerations:
+  - key: "app"
+    operator: "Equal"
+    value: "blue"
+    effect: "NoSchedule"
+
+    taints for nodes and toleration for pods

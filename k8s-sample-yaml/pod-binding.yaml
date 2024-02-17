@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Binding
+metadata:
+  name: nginx
+target:
+  apiVersion: v1
+  kind: Node
+  name: worker-1
+
+  ---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  nodeName: controlplane
+  containers:
+  -  image: nginx
+     name: nginx
+
+# kubectl replace --force -f pod.yaml

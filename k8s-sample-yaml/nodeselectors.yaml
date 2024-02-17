@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-prod # pod name
+  labels:
+    app: myapp     # labels 
+    type: front-end
+spec:
+  containers:  # is list and array
+    - name: nginx-container
+      image: nginx
+      ports:
+        - containerPort: 80 
+  nodeSelector:                   # it will assign the pod on larger node that has more capacity than others
+    size: Large
+
+
+# to set node larger label use below commad
+kubectl label nodes worker-1 size=Large
+
+# kubectl create -f pod-definition.yaml
+# kubectl describe pod myapp-prod

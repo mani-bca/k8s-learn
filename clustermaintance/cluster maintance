@@ -1,0 +1,3 @@
+kubectl drain worker-1 --ignore-deamonsets  --> this will clear all k8s related things and ready to do patch updates also it will move all pods and secrets deploy to other nodes
+kubectl cordon worker-1
+kubectl uncordon worker-1

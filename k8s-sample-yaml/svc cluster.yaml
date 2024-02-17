@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+
+spec:
+  type: ClusterIP  #   it is default if we dont mention type here
+  ports:                
+    - targetPort: 80  #it is target port (pod port)
+      port: 80         #it is service port   
+  selector:
+    app: myapp     # labels form metadata section of pod
+    type: back-end
+
+    #this service will do send traffive to multiple pods and multple nodes wvwn any new pods came up also

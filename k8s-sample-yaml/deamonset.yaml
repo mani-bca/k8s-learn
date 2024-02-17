@@ -1,0 +1,45 @@
+apiVersion: apps/v1 
+kind: DaemonSet
+metadata:
+  name: monitoring-daemon
+  labels:
+    app: monitoring-dae
+
+spec:
+  selector:
+    matchLabels:   #  it should be labels on pod metadata section same as it
+      app: monitoring-agent
+  template:
+    metadata:
+      labels:
+        app: monitoring-agent     # labels 
+    spec:
+      containers:  # is list and array
+      - name: monitoring-agent
+        image: monitoring-agent
+
+# kubectl create -f replica.yaml
+
+# kubectl get replicaset
+
+# kubectl delete replicaset myapp-replicaset
+
+# kubectl edit replicasets.apps myapp-replicaset
+
+# kubectl delete replicationcontrollers myapp-rc
+
+# kubectl scale replicaset myapp-replicaset --replicas=2
+
+# kubectl scale --replicas=8 -f replica.yaml
+# kubectl replace -f replica.yaml
+# kubectl run --restart=Never --image=busybox static-busybox --dry-run=client -o yaml --command -- sleep 1000 > /etc/kubernetes/manifests/static-busybox.yaml
+
+
+# Then, SSH to the node using that IP. For static pod manifest path look at the file /var/lib/kubelet/config.yaml
+#   cat /var/lib/kubelet/config.yaml | grep -i static
+
+
+
+
+# kubectl create -f pod-definition.yaml
+# kubectl describe pod myapp-prod

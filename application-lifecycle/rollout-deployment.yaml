@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment-roll
+  labels:
+    app: myapps
+    type: front-end
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+  template:
+    metadata:
+      name: myapps-prod
+      labels:
+        app: myapps
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:1.7.1
+
+# kubctl apply -f deployment-roll.yaml
+
+# or kubectl set image deployment/myapp-deployment-roll nginx-container=nginx:1.9.1
+
+# kubectl describe deployment myapp-deployment-roll
+
+# kubectl rollout undo deployment/myapp-deployment-roll
+
+# kubectl rollout history deployment/myapp-deployment-roll

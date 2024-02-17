@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod # pod name
+  labels:
+    app: nginx-app     # labels 
+    tier: front-end
+
+spec:
+  containers:  # is list and array
+    - name: nginx-container
+      image: nginx 
+
+# kubectl create -f nginx.yaml
+# kubectl describe pod nginx-pod

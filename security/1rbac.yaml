@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dev
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list", "create", "update"]
+  
+  - apiGroups: [""]
+    resources: ["ConfigMap"]
+    verbs: ["create"]
+    resourceNames: ["blue", "red"]  # particular pods
+
+
+
+# kubectl create -f devloper.yaml
+
+To create a Role:- 
+kubectl create role developer --namespace=default --verb=list,create,delete --resource=pods
+
+To create a RoleBinding:- 
+kubectl create rolebinding dev-user-binding --namespace=default --role=developer --user=dev-user

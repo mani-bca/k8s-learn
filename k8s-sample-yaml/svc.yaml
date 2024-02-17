@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+
+spec:
+  type: NodePort        
+  ports:                
+    - targetPort: 80  #it is target port (pod port)
+      port: 80         #it is service port   
+      nodePort: 30008     # it will auto allocate to 30000 - 32767 if we not define
+  selector:
+    app: myapp     # labels form metadata section of pod
+    type: front-end
+
+    #this service will do send traffive to multiple pods and multple nodes wvwn any new pods came up also
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-external-service
+  namespace: kubernetes-monitoring
+
+spec:
+  type: NodePort        
+  ports:                
+    - targetPort: 3000  #it is target port (pod port)
+      port: 80         #it is service port   
+      nodePort: 30008     # it will auto allocate to 30000 - 32767 if we not define
+  selector:   # labels form metadata section of pod
+    app.kubernetes.io/name: grafana
